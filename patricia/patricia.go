@@ -90,6 +90,17 @@ func (trie *Trie) Set(key Prefix, item Item) {
 	trie.put(key, item, true)
 }
 
+// SubGet returns the item located at key, or the closest match.
+//
+// This method functions exactly like Get, but if the full prefix can't be matched, returns the deepest match in the tree that matches.
+func (trie *Trie) SubGet(key Prefix) (item Item, leftover Prefix) {
+	_, node, _, leftover := trie.findSubtree(key)
+	if node == nil {
+		return nil, leftover
+	}
+	return node.item, leftover
+}
+
 // Get returns the item located at key.
 //
 // This method is a bit dangerous, because Get can as well end up in an internal
